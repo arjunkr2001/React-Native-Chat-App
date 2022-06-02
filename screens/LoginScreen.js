@@ -1,26 +1,52 @@
-import React from 'react';
+import { useNavigation } from '@react-navigation/core';
+import React, { useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
 
 const LoginScreen = () => {
+    
+    let [email, setEmail] = useState('')
+    let [password, setPassword] = useState('')
+
+    const navigation = useNavigation()
+
+    function handleSignUp(){
+        Keyboard.dismiss()
+    }
+    function handleLogIn(){
+        Keyboard.dismiss()
+        navigation.navigate("Home")
+    }
+
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
         <KeyboardAvoidingView style={styles.container} >
+            <Text style={styles.heading}>Login</Text>
             <View style={styles.inputContainer}>
                 <TextInput
                     placeholder='Email'
+                    value={email}
+                    onChangeText={text => setEmail(text)}
                     style={styles.input} 
                 />
                 <TextInput
                     placeholder='Password'
+                    value={password}
+                    onChangeText={text => setPassword(text)}
                     style={styles.input}
                     secureTextEntry 
                 />
             </View>
             <View style={styles.btnContainer}>
-                <TouchableOpacity style={[styles.btn, styles.rbtn]}>
+                <TouchableOpacity
+                 style={[styles.btn, styles.rbtn]}
+                 onPress={handleSignUp}
+                >
                     <Text style={{color:'white'}}>SignUp</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.btn}>
+                <TouchableOpacity
+                 style={styles.btn}
+                 onPress={handleLogIn}
+                >
                     <Text>LogIn</Text>
                 </TouchableOpacity>
             </View>
@@ -52,6 +78,7 @@ const styles = StyleSheet.create({
     btnContainer:{
         flexDirection:'row',
         width:'80%',
+        marginTop: 20
     },
     btn:{
         borderWidth: 2,
@@ -63,5 +90,9 @@ const styles = StyleSheet.create({
     rbtn:{
         backgroundColor:'black',
         marginRight:10
+    },
+    heading:{
+        fontSize: 40,
+        marginBottom: 50,
     }
 })
