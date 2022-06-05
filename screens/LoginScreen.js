@@ -1,8 +1,17 @@
 import { useNavigation } from '@react-navigation/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
+    let userLoggedIn = null;
+    useEffect(() => {
+        async function fetchData(){
+            userLoggedIn = await AsyncStorage.getItem('@user')
+            console.log(userLoggedIn) 
+        }
+        fetchData()
+    },[])
     
     let [email, setEmail] = useState('')
     let [password, setPassword] = useState('')
@@ -11,11 +20,28 @@ const LoginScreen = () => {
 
     function handleSignUp(){
         Keyboard.dismiss()
+        console.log(email.split("@")[0])
+        storeData(email.split("@")[0])
     }
     function handleLogIn(){
         Keyboard.dismiss()
-        navigation.navigate("Home")
+        async function fetchData(){
+            let userLoggedIn = await AsyncStorage.getItem('@user')
+            console.log(userLoggedIn)
+            if(userLoggedIn != null){
+                navigation.replace("Home") 
+            } 
+        }
+        fetchData()
     }
+
+    const storeData = async (value) => {
+        try {
+          await AsyncStorage.setItem('@user', value)
+        } catch (e) {
+          // saving error
+        }
+      }
 
     return(
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
