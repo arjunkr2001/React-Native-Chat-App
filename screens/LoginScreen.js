@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
-import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
@@ -19,9 +19,12 @@ const LoginScreen = () => {
     const navigation = useNavigation()
 
     function handleSignUp(){
-        Keyboard.dismiss()
-        console.log(email.split("@")[0])
-        storeData(email.split("@")[0])
+        if(email != '' && password != ''){
+            Keyboard.dismiss()
+            console.log(email.split("@")[0])
+            storeData(email.split("@")[0])
+            ToastAndroid.show("Registerd :)", ToastAndroid.SHORT);
+        }
     }
     function handleLogIn(){
         Keyboard.dismiss()
