@@ -4,16 +4,34 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity, Button, StyleSheet, Text, View, FlatList, TextInput,KeyboardAvoidingView, Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useEffect } from 'react';
+import { io } from 'socket.io-client';
+
+const socket = io('http://192.168.42.166:3000')
 
 const HomeScreen = () => {
+	let chatlist = useRef()
     let [userLoggedIn, setU] = useState(null);
     useEffect(() => {
+		let isMounted = true;
+		//get()
         async function fetchData(){
             let userLogged = await AsyncStorage.getItem('@user')
             setU(userLogged)
             //console.log(userLoggedIn) 
+			//get()
         }
         fetchData()
+		//get()
+		socket.on('data', (data)=>{
+			setMessages((prevMsgs)=>{
+				return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
+			})
+			chatlist.current.scrollToEnd()
+		})
+		
+		return () => {
+			isMounted = false;
+		};
     },[])
 
     const navigation = useNavigation()
@@ -33,61 +51,42 @@ const HomeScreen = () => {
         AsyncStorage.getItem('@user').then((val)=>{console.log(val)})
     }
 
-    let chatlist = useRef()
+	
+	
+    
     let [msg,setMsg] = useState()
     function sendMsg(){
-      if(msg != null){
-        setMessages((prevMsgs)=>{
-          return [...prevMsgs,{key:Math.random(),title:msg}]
-        })
-        setMsg()
-        Keyboard.dismiss()
-        chatlist.current.scrollToEnd()
-      }
+      //if(msg != null){
+      //  setMessages((prevMsgs)=>{
+      //    return [...prevMsgs,{key:Math.random(),user:userLoggedIn,title:msg}]
+      //  })
+      //  setMsg()
+      //  Keyboard.dismiss()
+      //  chatlist.current.scrollToEnd()
+      //}
+	  if(msg != null){
+		socket.emit('data',{key:Math.random(),user:userLoggedIn,title:msg})
+		setMsg()
+		Keyboard.dismiss()
+		chatlist.current.scrollToEnd()
+	  }
+	  //socket.on('data', (data)=>{
+		//setMessages((prevMsgs)=>{
+			//return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
+		//})
+	  //})
     }
+	//async function get(){
+	//	await socket.on('data', (data)=>{
+	//		setMessages((prevMsgs)=>{
+	//			return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
+	//		})
+	//	})
+	//	chatlist.current.scrollToEnd()
+	//}
+	
 
-    let [messages,setMessages] = useState([
-        // {
-        //   key:'1',
-        //   title:'abcd'
-        // },
-        // {
-        //   key:'2',
-        //   title:'bcd'
-        // },
-        // {
-        //   key:'3',
-        //   title:'vbcd'
-        // },
-        // {
-        //   key:'4',
-        //   title:'hfbcd'
-        // },
-        // {
-        //   key:'5',
-        //   title:'jkucdjkhgcfjkyt'
-        // },
-        // {
-        //   key:'6',
-        //   title:'abcdsdfsdfsdfdsfsdfsdfsdfsdfdfsdfsdfsdfsdfdfsdfsdfsdfsdfsffd'
-        // },
-        // {
-        //   key:'7',
-        //   title:'bcd'
-        // },
-        // {
-        //   key:'8',
-        //   title:'vbcd'
-        // },
-        // {
-        //   key:'9',
-        //   title:'hfbcd'
-        // },
-        // {
-        //   key:'10',
-        //   title:'jkucd'
-        // },
-      ])
+    let [messages,setMessages] = useState([])
 
     return(
         <View style={styles.container}>
@@ -108,7 +107,10 @@ const HomeScreen = () => {
                     ref={chatlist}
                     data={messages}
                     renderItem={({item})=>(
-                        <Text style={{padding:20,margin:10,borderWidth:2,borderRadius:15}}>{item.title}</Text>
+                      <View style={{padding:20,margin:10,borderWidth:2,borderRadius:15}}>
+                        <Text style={{position:'absolute',top:-4,left:6,color:'gray',fontFamily:'sans-serif-condensed'}}>{item.user}</Text>
+                        <Text>{item.title}</Text>
+                      </View> 
                     )}
                 />
             </View>
