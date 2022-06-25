@@ -3,12 +3,17 @@ import { useNavigation } from '@react-navigation/core';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity, Button, StyleSheet, Text, View, FlatList, TextInput,KeyboardAvoidingView, Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+//import * as Location from 'expo-location';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
-
+import { gL } from '../App'
+//console.log(App)
 const socket = io('http://192.168.42.166:3000')
 
 const HomeScreen = () => {
+  //const [location, setLocation] = useState(null);
+  //const [errorMsg, setErrorMsg] = useState(null);
+  //console.log(App.location)
 	let chatlist = useRef()
     let [userLoggedIn, setU] = useState(null);
     useEffect(() => {
@@ -28,11 +33,27 @@ const HomeScreen = () => {
 			})
 			chatlist.current.scrollToEnd()
 		})
+    console.log(gL.ad[0].city)
 		
+
 		return () => {
 			isMounted = false;
 		};
     },[])
+
+    // (async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== 'granted') {
+    //     setErrorMsg('Permission to access location was denied');
+    //     return;
+    //   }
+
+    //   let location = await Location.getCurrentPositionAsync({});
+    //   let address = await Location.reverseGeocodeAsync(location.coords)
+    //   //setLocation(location);
+    //   console.log(address)
+    //   //gL = address
+    // })();
 
     const navigation = useNavigation()
 
@@ -91,7 +112,7 @@ const HomeScreen = () => {
     return(
         <View style={styles.container}>
           <View style={styles.appBar}>
-            <Text style={{color: 'white',fontSize:25,fontWeight:'bold'}}>Chats</Text>
+            <Text style={{color: 'white',fontSize:25,fontWeight:'bold'}}>{gL.ad[0].city}</Text>
             <TouchableOpacity onPress={logOut}>
               <View style={styles.logoutbtn}>
                 <Text style={{color: 'white'}}>Logout</Text>
