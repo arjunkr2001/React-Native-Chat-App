@@ -3,37 +3,57 @@ import { useNavigation } from '@react-navigation/core';
 import { MaterialIcons } from '@expo/vector-icons';
 import { TouchableOpacity, Button, StyleSheet, Text, View, FlatList, TextInput,KeyboardAvoidingView, Keyboard } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-//import * as Location from 'expo-location';
+import * as Location from 'expo-location';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
-import { gL } from '../App'
+import { gL } from './LoginScreen'
 //console.log(App)
-const socket = io('http://192.168.42.166:3000')
+const socket = io('http://192.168.42.71:3000')
 
 const HomeScreen = () => {
   //const [location, setLocation] = useState(null);
   //const [errorMsg, setErrorMsg] = useState(null);
   //console.log(App.location)
 	let chatlist = useRef()
-    let [userLoggedIn, setU] = useState(null);
+  let [userLoggedIn, setU] = useState(null);
+  //const [location, setLocation] = useState(null);
+  //const [errorMsg, setErrorMsg] = useState(null);
+  //const [address,setAddress] = useState(null);
     useEffect(() => {
 		let isMounted = true;
 		//get()
-        async function fetchData(){
+        (async function fetchData(){
             let userLogged = await AsyncStorage.getItem('@user')
             setU(userLogged)
             //console.log(userLoggedIn) 
 			//get()
-        }
-        fetchData()
+        })();
+        //fetchData()
 		//get()
+    // (async () => {
+    //   let { status } = await Location.requestForegroundPermissionsAsync();
+    //   if (status !== 'granted') {
+    //     setErrorMsg('Permission to access location was denied');
+    //     return;
+    //   }
+
+    //   let location = await Location.getCurrentPositionAsync({});
+    //   //let address = await Location.reverseGeocodeAsync(location.coords)
+    //   setAddress(await Location.reverseGeocodeAsync(location.coords[0].city))
+    //   console.log(address)
+    //   //gL.ad = address
+    // })();
+    console.log(gL.ad[0].city)
+    //let r = gL.ad[0].city
+    socket.emit('join-room',gL.ad[0].city)
 		socket.on('data', (data)=>{
 			setMessages((prevMsgs)=>{
 				return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
 			})
-			chatlist.current.scrollToEnd()
+		//	chatlist.current.scrollToEnd()
 		})
-    console.log(gL.ad[0].city)
+    //console.log(gL.ad[0].city)
+    //console.log(address)
 		
 
 		return () => {
@@ -86,7 +106,7 @@ const HomeScreen = () => {
       //  chatlist.current.scrollToEnd()
       //}
 	  if(msg != null){
-		socket.emit('data',{key:Math.random(),user:userLoggedIn,title:msg})
+		socket.emit('data',{key:Math.random(),user:userLoggedIn,title:msg},gL.ad[0].city)
 		setMsg()
 		Keyboard.dismiss()
 		chatlist.current.scrollToEnd()
@@ -112,7 +132,7 @@ const HomeScreen = () => {
     return(
         <View style={styles.container}>
           <View style={styles.appBar}>
-            <Text style={{color: 'white',fontSize:25,fontWeight:'bold'}}>{gL.ad[0].city}</Text>
+            <Text style={{color: 'white',fontSize:20,maxWidth:'80%',overflow:'scroll',fontWeight:'bold'}}>{gL.ad[0].city}</Text>
             <TouchableOpacity onPress={logOut}>
               <View style={styles.logoutbtn}>
                 <Text style={{color: 'white'}}>Logout</Text>

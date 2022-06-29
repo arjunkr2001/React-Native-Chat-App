@@ -2,15 +2,39 @@ import { useNavigation } from '@react-navigation/core';
 import React, { useEffect, useState } from 'react';
 import { Keyboard, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, ToastAndroid } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as Location from 'expo-location';
+
+let gL = {}
 
 const LoginScreen = () => {
     let userLoggedIn = null;
     useEffect(() => {
-        async function fetchData(){
+        (async function fetchData(){
             userLoggedIn = await AsyncStorage.getItem('@user')
             console.log(userLoggedIn) 
+        })();
+        //fetchData()
+
+        // const [location, setLocation] = useState(null);
+  // const [errorMsg, setErrorMsg] = useState(null);
+
+  
+        (async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            setErrorMsg('Permission to access location was denied');
+            return;
         }
-        fetchData()
+
+        let location = await Location.getCurrentPositionAsync({});
+        let address = await Location.reverseGeocodeAsync(location.coords)
+        //setLocation(location);
+        console.log(address)
+        //setLocation(JSON.stringify(address))
+        //console.log(location)
+        gL.ad = address
+        })();
+
     },[])
     
     let [email, setEmail] = useState('')
@@ -85,6 +109,7 @@ const LoginScreen = () => {
 }
 
 export default LoginScreen
+export {gL}
 
 const styles = StyleSheet.create({
     container:{

@@ -8,37 +8,37 @@ import LoginScreen from './screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 
 const Stack = createNativeStackNavigator();
-let gL = {}
+//let gL = {}
 
 export default function App() {
-  const [location, setLocation] = useState(null);
-  const [errorMsg, setErrorMsg] = useState(null);
+  // const [location, setLocation] = useState(null);
+  // const [errorMsg, setErrorMsg] = useState(null);
 
-  useEffect(() => {
-    (async () => {
-      let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
-        return;
-      }
+  // useEffect(() => {
+  //   (async () => {
+  //     let { status } = await Location.requestForegroundPermissionsAsync();
+  //     if (status !== 'granted') {
+  //       setErrorMsg('Permission to access location was denied');
+  //       return;
+  //     }
 
-      let location = await Location.getCurrentPositionAsync({});
-      let address = await Location.reverseGeocodeAsync(location.coords)
-      //setLocation(location);
-      console.log(address)
-      //setLocation(JSON.stringify(address))
-      //console.log(location)
-      gL.ad = address
-    })();
-  }, []);
+  //     let location = await Location.getCurrentPositionAsync({});
+  //     let address = await Location.reverseGeocodeAsync(location.coords)
+  //     //setLocation(location);
+  //     console.log(address)
+  //     //setLocation(JSON.stringify(address))
+  //     //console.log(location)
+  //     gL.ad = address
+  //   })();
+  // }, []);
 
-  let text = 'Waiting..';
-  if (errorMsg) {
-    text = errorMsg;
-  } else if (location) {
-    text = JSON.stringify(location);
-    //console.log(text)
-  }
+  // let text = 'Waiting..';
+  // if (errorMsg) {
+  //   text = errorMsg;
+  // } else if (location) {
+  //   text = JSON.stringify(location);
+  //   //console.log(text)
+  // }
 
 
   return (
@@ -50,7 +50,7 @@ export default function App() {
     </NavigationContainer>
   );
 }
-export {gL}
+//export {gL}
 // const styles = StyleSheet.create({
 //   container: {
 //     flex: 1,
