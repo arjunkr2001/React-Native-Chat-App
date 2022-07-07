@@ -50,7 +50,7 @@ const HomeScreen = () => {
 			setMessages((prevMsgs)=>{
 				return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
 			})
-		//	chatlist.current.scrollToEnd()
+			chatlist.current.scrollToEnd()
 		})
     //console.log(gL.ad[0].city)
     //console.log(address)
@@ -149,7 +149,7 @@ const HomeScreen = () => {
                     data={messages}
                     renderItem={({item})=>(
                       <View style={{padding:20,margin:10,borderWidth:2,borderRadius:15}}>
-                        <Text style={{position:'absolute',top:-4,left:6,color:'gray',fontFamily:'sans-serif-condensed'}}>{item.user}</Text>
+                        <Text style={{position:'absolute',top:0,right:0,color:'white',backgroundColor:'black',borderBottomLeftRadius:10,borderTopRightRadius:10,paddingHorizontal:10,fontFamily:'sans-serif-condensed',fontWeight:'800',fontSize:10}}>{item.user}</Text>
                         <Text>{item.title}</Text>
                       </View> 
                     )}

@@ -45,9 +45,14 @@ const LoginScreen = () => {
     function handleSignUp(){
         if(email != '' && password != ''){
             Keyboard.dismiss()
-            console.log(email.split("@")[0])
-            storeData(email.split("@")[0])
-            ToastAndroid.show("Registerd :)", ToastAndroid.SHORT);
+            if(email.endsWith('@gmail.com')){
+                console.log(email.split("@")[0])
+                storeData(email.split("@")[0])
+                ToastAndroid.show("Registerd :)", ToastAndroid.SHORT);
+            }
+            else{
+                 ToastAndroid.show("Use Gmail !", ToastAndroid.SHORT);
+            }
         }
     }
     function handleLogIn(){
