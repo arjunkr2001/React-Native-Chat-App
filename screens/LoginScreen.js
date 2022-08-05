@@ -13,10 +13,10 @@ const LoginScreen = () => {
             userLoggedIn = await AsyncStorage.getItem('@user')
             console.log(userLoggedIn) 
         })();
-        //fetchData()
+        
 
-        // const [location, setLocation] = useState(null);
-  // const [errorMsg, setErrorMsg] = useState(null);
+        
+  
 
   
         (async () => {
@@ -28,10 +28,10 @@ const LoginScreen = () => {
 
         let location = await Location.getCurrentPositionAsync({});
         let address = await Location.reverseGeocodeAsync(location.coords)
-        //setLocation(location);
+        
         console.log(address)
-        //setLocation(JSON.stringify(address))
-        //console.log(location)
+        
+        
         gL.ad = address
         })();
 
@@ -71,7 +71,7 @@ const LoginScreen = () => {
         try {
           await AsyncStorage.setItem('@user', value)
         } catch (e) {
-          // saving error
+          
         }
       }
 

@@ -7,44 +7,18 @@ import * as Location from 'expo-location';
 import { useEffect } from 'react';
 import { io } from 'socket.io-client';
 import { gL } from './LoginScreen'
-//console.log(App)
 const socket = io('http://192.168.42.71:3000')
 
 const HomeScreen = () => {
-  //const [location, setLocation] = useState(null);
-  //const [errorMsg, setErrorMsg] = useState(null);
-  //console.log(App.location)
 	let chatlist = useRef()
   let [userLoggedIn, setU] = useState(null);
-  //const [location, setLocation] = useState(null);
-  //const [errorMsg, setErrorMsg] = useState(null);
-  //const [address,setAddress] = useState(null);
-    useEffect(() => {
-		let isMounted = true;
-		//get()
+    useEffect(() => {	let isMounted = true;	
         (async function fetchData(){
             let userLogged = await AsyncStorage.getItem('@user')
             setU(userLogged)
-            //console.log(userLoggedIn) 
-			//get()
-        })();
-        //fetchData()
-		//get()
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== 'granted') {
-    //     setErrorMsg('Permission to access location was denied');
-    //     return;
-    //   }
-
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   //let address = await Location.reverseGeocodeAsync(location.coords)
-    //   setAddress(await Location.reverseGeocodeAsync(location.coords[0].city))
-    //   console.log(address)
-    //   //gL.ad = address
-    // })();
+        })();     
     console.log(gL.ad[0].city)
-    //let r = gL.ad[0].city
+    
     socket.emit('join-room',gL.ad[0].city)
 		socket.on('data', (data)=>{
 			setMessages((prevMsgs)=>{
@@ -52,28 +26,11 @@ const HomeScreen = () => {
 			})
 			chatlist.current.scrollToEnd()
 		})
-    //console.log(gL.ad[0].city)
-    //console.log(address)
-		
 
 		return () => {
 			isMounted = false;
 		};
-    },[])
-
-    // (async () => {
-    //   let { status } = await Location.requestForegroundPermissionsAsync();
-    //   if (status !== 'granted') {
-    //     setErrorMsg('Permission to access location was denied');
-    //     return;
-    //   }
-
-    //   let location = await Location.getCurrentPositionAsync({});
-    //   let address = await Location.reverseGeocodeAsync(location.coords)
-    //   //setLocation(location);
-    //   console.log(address)
-    //   //gL = address
-    // })();
+    },[])   
 
     const navigation = useNavigation()
 
@@ -81,7 +38,7 @@ const HomeScreen = () => {
         try {
           await AsyncStorage.removeItem('@user')
         } catch(e) {
-          // remove error
+          
         }
       
         console.log('Logged Out.')
@@ -96,35 +53,14 @@ const HomeScreen = () => {
 	
     
     let [msg,setMsg] = useState()
-    function sendMsg(){
-      //if(msg != null){
-      //  setMessages((prevMsgs)=>{
-      //    return [...prevMsgs,{key:Math.random(),user:userLoggedIn,title:msg}]
-      //  })
-      //  setMsg()
-      //  Keyboard.dismiss()
-      //  chatlist.current.scrollToEnd()
-      //}
+    function sendMsg(){  
 	  if(msg != null){
 		socket.emit('data',{key:Math.random(),user:userLoggedIn,title:msg},gL.ad[0].city)
 		setMsg()
 		Keyboard.dismiss()
 		chatlist.current.scrollToEnd()
-	  }
-	  //socket.on('data', (data)=>{
-		//setMessages((prevMsgs)=>{
-			//return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
-		//})
-	  //})
+	  } 
     }
-	//async function get(){
-	//	await socket.on('data', (data)=>{
-	//		setMessages((prevMsgs)=>{
-	//			return [...prevMsgs,{key:Math.random(),user:data.user,title:data.title}]
-	//		})
-	//	})
-	//	chatlist.current.scrollToEnd()
-	//}
 	
 
     let [messages,setMessages] = useState([])
@@ -182,10 +118,10 @@ const styles = StyleSheet.create({
     chats:{
         flex: 1,
         width: '100%',
-        //alignItems: 'flex-start',
+        
         justifyContent: 'center',
         backgroundColor: 'white',
-        //marginBottom: 5
+        
     },
     inputContainer:{
         width: '100%',
@@ -194,21 +130,21 @@ const styles = StyleSheet.create({
         paddingHorizontal: 5,
         flexDirection: 'row',
         alignItems: 'center',
-        //justifyContent: 'space-around',
-        //elevation: 20
+        
+        
     },
     input:{
-        //flexGrow: 8,
+        
         width: '80%',
         height: '80%',
         borderWidth:2,
         borderColor:'black',
-        //marginBottom:10,
+        
         padding:20,
         borderRadius:50,
     },
     btn:{
-        // flexGrow: 1,
+        
         width: '20%',
         alignItems: 'center'
     },
